@@ -1,2 +1,11 @@
 # Capstone_Fitbit_with_R
-Discover any trends in smart device usage, And see how these trends help to influence Bellabeat marketing strategy. Using R_Progrmming
+## Business Task
+Bellabeat is a high-tech company that manufactures health-focused smart products. They want to develop beautifully designed technology that informs and inspires women around the world. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with knowledge about their own health and habits.
+
+Our primary goal to focus on analyze smart devices fitness data and determine how it can be used to develop Bellabeat's products.
+
+## Dataset 
+* [Fitbit](https://www.kaggle.com/datasets/arashnic/fitbit)
+  
+## Tools
+* R - [R scripts](https://www.kaggle.com/code/moayedalmallah/capstone-bellabeat-fitbit-with-r)
