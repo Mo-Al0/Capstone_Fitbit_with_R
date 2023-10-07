@@ -1,0 +1,556 @@
+(Preferable) You can Access to my R-Script in Kaggle. [Kaggle_R_scripts](https://www.kaggle.com/code/moayedalmallah/capstone-bellabeat-fitbit-with-r)
+
+# %% [markdown]
+# # <span style="color:#FF0000"> Case Study </span>
+# # <span style="color:#0000FF"> My First Project </span>
+# 
+# 
+# # <span style="color:#000000"> Table of Contents </span>
+# 
+# -   [1. Summary](#summary_1)
+# -   [2. Ask Phase](#ask_phase_2)
+#     -   [2.1 Business Task](#business_task_2_1)
+#     -   [2.2 Stakeholders](#Stakeholders_2_2)
+# -   [3. Prepare Phase](#prepare_phase_3)
+#     -   [3.1 Dataset used](#dataset_used_3_1)
+#     -   [3.2 Accessibility and privacy of data](#accessibility_and_privacy_of_data_3_2)
+#     -   [3.3 Information about our dataset](#information_about_our_dataset_3_3)
+#     -   [3.4 Data organization and verification](#data_organization_and_verification_3_4)
+#     -   [3.5 Data credibility and integrity](#data_credibility_and_integrity_3_5)
+# -   [4. Process Phase](#process_phase_4)
+#     -   [4.1 Installing packages and opening libraries](#installing_packages_and_opening_libraries_4_1)
+#     -   [4.2 Importing datasets](#importing_datasets_4_2)
+#     -   [4.3 Preview our datasets](#preview_our_datasets_4_3)
+#     -   [4.4 Cleaning and formatting](#cleaning_and_formatting_4_4)
+#     -   [4.5 Merging datasets](#merging_datasets_4_5)
+# -   [5. Analyze and Share Phase](#analyze_phase_5)
+#     -   [5.1 Type of users per activity level](#type_of_users_per_activity_level)
+#     -   [5.2 Calculating the weekdays based on our column date](#Calculating_the_weekdays)
+#     -   [5.3 Hourly steps throughout the day](#hourly_steps_throughout_the_day)
+#     -   [5.4 Correlations](#correlations)
+#     -   [5.5 Use of smart device](#use_of_smart_device)
+# -   [6. Act Phase](#conclusion_act_phase)    
+# 
+# # <span style="color:#DAA520"> 1. Summary </span> <a class="anchor" id="summary_1"></a>
+# 
+# Bellabeat is a high-tech company that manufactures health-focused smart products. They want to develop beautifully designed technology that informs and inspires women around the world. Collecting data on activity, sleep, stress, and reproductive health has allowed Bellabeat to empower women with knowledge about their own health and habits.
+# 
+# Our primary goal to focus on analyze smart devices fitness data and determine how it can be used to develop Bellabeat's products
+# # <span style="color:#DAA520"> 2. Ask Phase </span> <a class="anchor" id="ask_phase_2"></a>
+# 
+# ### 2.1 Business Task <a class="anchor" id="business_task_2_1"></a>
+# 
+# Discover any trends in smart device usage, And see how these trends help to influence Bellabeat marketing strategy.
+# 
+# ### 2.2 Stakeholders
+# 
+# -   Urška Sršen: Bellabeat's cofounder and Chief Creative Officer
+# -   Sando Mur: Mathematician and Bellabeat's cofounder; key member of the Bellabeat executive team
+# -   Bellabeat marketing analytics team
+# 
+# # <span style="color:#DAA520"> 3. Prepare Phase </span> <a class="anchor" id="ask_phase_2"></a>
+# 
+# 
+# #### 3.1 Dataset used: <a class="anchor" id="dataset_used_3_1"></a>
+# 
+# FitBit Fitness Tracker Data (CC0: Public Domain, dataset made available through Mobius) From Kaggle dataset.
+# 
+# #### 3.2 Accessibility and privacy of data: <a class="anchor" id="accessibility_and_privacy_of_data_3_2"></a>
+# 
+# The metadata of our dataset is open-source. The owner has dedicated the work can be for public use and can be adjusted without asking for permission.
+# 
+# #### 3.3 Information about our dataset:<a class="anchor" id="information_about_our_dataset_3_3"></a>
+# 
+# The data set contains personal fitness tracker from thirty fitbit users. Thirty eligible Fitbit users consented to the submission of personal tracker data, including minute-level output for physical activity, heart rate, and sleep monitoring. It includes information about daily activity, steps, and heart rate that can be used to explore users' habits.
+# 
+# #### 3.4 Data Organization and verification: <a class="anchor" id="data_organization_and_verification_3_4"></a>
+# 
+# We have different quantitative data 18 CSV documents by Fitbit.
+# 
+# The data is considered long. Every user has a unique ID and different rows since data is tracked by day and time.
+# 
+# #### 3.5 Data Credibility and Integrity:<a class="anchor" id="data_credibility_and_integrity_3_5"></a>
+# 
+# The dataset is not current.
+# 
+# # <span style="color:#DAA520"> 4. Process Phase </span> <a class="anchor" id="ask_phase_2"></a>
+# 
+# Focusing analysis in R and discover trends then based on my analysis i can create data visualization to share my results and recommendations with the stakeholders.
+# 
+# ### 4.1 Installing packages and opening libraries <a class="anchor" id="installing_packages_and_opening_libraries_4_1"></a>
+# 
+# 
+# #### We will install and use packages below :-
+# 
+# * tidyverse
+# * here
+# * skimr
+# * janitor
+# * lubridate
+# * ggpubr
+# * ggrepel
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:37:12.672992Z","iopub.execute_input":"2023-10-01T04:37:12.67567Z","iopub.status.idle":"2023-10-01T04:39:36.219697Z"}}
+install.packages("cowplot")
+install.packages("rstatix")
+install.packages("tidyverse")
+install.packages("ggplot2")
+install.packages("janitor")
+install.packages("skimr")
+install.packages("lubridate")
+install.packages("here")
+install.packages("ggrepel")
+install.packages("ggpubr")
+
+# %% [code] {"_kg_hide-output":true,"_kg_hide-input":false,"execution":{"iopub.status.busy":"2023-10-01T04:39:36.223707Z","iopub.execute_input":"2023-10-01T04:39:36.256057Z","iopub.status.idle":"2023-10-01T04:39:37.235809Z"}}
+library(cowplot)
+library(ggplot2)
+library(tidyverse)
+library(here)
+library(skimr)
+library(janitor)
+library(lubridate)
+library(ggrepel)
+library(ggpubr)
+
+# %% [markdown]
+# ### 4.2 Importing datasets <a class="anchor" id="importing_datasets_4_2"></a>
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:40:45.864655Z","iopub.execute_input":"2023-10-01T04:40:45.86754Z","iopub.status.idle":"2023-10-01T04:40:46.824946Z"}}
+### Importing datasets 
+
+daily_activity <- read_csv(file= "../input/fitbit/Fitabase Data 4.12.16-5.12.16/dailyActivity_merged.csv")
+daily_sleep <- read_csv(file= "../input/fitbit/Fitabase Data 4.12.16-5.12.16/sleepDay_merged.csv")
+hourly_steps <- read_csv("../input/fitbit/Fitabase Data 4.12.16-5.12.16/hourlySteps_merged.csv")
+daily_calories <- read.csv("/kaggle/input/fitbit/Fitabase Data 4.12.16-5.12.16/dailyCalories_merged.csv")
+weight <- read.csv("../input/fitbit/Fitabase Data 4.12.16-5.12.16/weightLogInfo_merged.csv")
+
+# %% [markdown]
+# ### 4.3 Preview our datasets <a class="anchor" id="preview_our_datasets_4_3"></a>
+# 
+
+# %% [code] {"_kg_hide-output":true,"execution":{"iopub.status.busy":"2023-10-01T04:40:52.069053Z","iopub.execute_input":"2023-10-01T04:40:52.071187Z","iopub.status.idle":"2023-10-01T04:40:52.161239Z"}}
+head(daily_activity)
+
+str(daily_activity)
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:40:56.189732Z","iopub.execute_input":"2023-10-01T04:40:56.191985Z","iopub.status.idle":"2023-10-01T04:40:56.246067Z"}}
+head(daily_sleep)
+
+str(daily_sleep)
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:40:58.170312Z","iopub.execute_input":"2023-10-01T04:40:58.172584Z","iopub.status.idle":"2023-10-01T04:40:58.229362Z"}}
+head(hourly_steps)
+
+str(hourly_steps)
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:00.342755Z","iopub.execute_input":"2023-10-01T04:41:00.34532Z","iopub.status.idle":"2023-10-01T04:41:00.390152Z"}}
+head(daily_calories)
+
+str(daily_calories)
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:02.123463Z","iopub.execute_input":"2023-10-01T04:41:02.125504Z","iopub.status.idle":"2023-10-01T04:41:02.181623Z"}}
+head(weight)
+
+str(weight)
+
+# %% [markdown]
+# ### 4.4 Cleaning and formatting <a class="anchor" id="cleaning_and_formatting_4_4"></a>
+# 
+# #### 4.4.1 Veryfying number of users
+# 
+# Checking how many unique users are per data frame before we continue with our cleaning  
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:04.585933Z","iopub.execute_input":"2023-10-01T04:41:04.587879Z","iopub.status.idle":"2023-10-01T04:41:04.644261Z"}}
+n_unique(daily_activity$Id)
+n_unique(daily_sleep$Id)
+n_unique(hourly_steps$Id)
+n_unique(daily_calories$Id)
+n_unique(weight$Id)
+
+
+
+# %% [markdown]
+# #### 4.4.2 Duplicates
+# 
+# Looking for any duplicates
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:06.97312Z","iopub.execute_input":"2023-10-01T04:41:06.975093Z","iopub.status.idle":"2023-10-01T04:41:07.089022Z"}}
+sum(duplicated(daily_activity))
+sum(duplicated(daily_sleep))
+sum(duplicated(hourly_steps))
+sum(duplicated(daily_calories))
+sum(duplicated(weight))
+
+# %% [markdown]
+# #### 4.4.3 Remove duplicates and N/A
+# 
+# Notice the length of our observations (daily_sleep 413) 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:08.931272Z","iopub.execute_input":"2023-10-01T04:41:08.933302Z","iopub.status.idle":"2023-10-01T04:41:08.983458Z"}}
+daily_activity <- daily_activity %>%
+  distinct() %>%
+  drop_na()
+
+daily_sleep <- daily_sleep %>%
+  distinct() %>%
+  drop_na()
+
+hourly_steps <- hourly_steps %>%
+  distinct() %>%
+  drop_na()
+
+# %% [markdown]
+# #### 4.4.4 Verify that duplicates have been removed
+# Length of our observations of daily_sleep Was (413) -> Now (410)
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:11.552065Z","iopub.execute_input":"2023-10-01T04:41:11.554284Z","iopub.status.idle":"2023-10-01T04:41:11.585912Z"}}
+sum(duplicated(daily_sleep))
+
+# %% [markdown]
+# #### 4.4.5 Clean and rename our columns
+# 
+# 
+
+# %% [code] {"_kg_hide-output":true,"execution":{"iopub.status.busy":"2023-10-01T04:41:13.382097Z","iopub.execute_input":"2023-10-01T04:41:13.384206Z","iopub.status.idle":"2023-10-01T04:41:14.059052Z"}}
+clean_names(daily_activity)
+
+daily_activity<- rename_with(daily_activity, tolower)
+
+clean_names(daily_sleep)
+
+daily_sleep <- rename_with(daily_sleep, tolower)
+
+clean_names(hourly_steps)
+
+hourly_steps <- rename_with(hourly_steps, tolower)
+
+clean_names(daily_calories)
+
+daily_calories <- rename_with(daily_calories, tolower)
+
+clean_names(weight)
+
+weight <- rename_with(weight, tolower)
+
+# %% [markdown]
+# #### 4.4.7 Consistency of date and time columns 
+# #### (cleaning date-time format )
+# Since we can disregard the time on daily_sleep data frame we are using as_date instead as as_datetime
+# 
+
+# %% [code] {"_kg_hide-output":true,"execution":{"iopub.status.busy":"2023-10-01T04:41:16.640134Z","iopub.execute_input":"2023-10-01T04:41:16.642326Z","iopub.status.idle":"2023-10-01T04:41:16.790795Z"}}
+daily_activity <- daily_activity %>%
+  rename(date = activitydate) %>%
+  mutate(date = as_date(date, format = "%m/%d/%Y"))
+
+daily_sleep <- daily_sleep %>%
+  rename(date = sleepday) %>%
+  mutate(date = as_date(date,format ="%m/%d/%Y %I:%M:%S %p" , tz=Sys.timezone()))
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:18.556921Z","iopub.execute_input":"2023-10-01T04:41:18.558878Z","iopub.status.idle":"2023-10-01T04:41:18.607303Z"}}
+### For our hourly_steps dataset we will convert date string to date-time
+
+hourly_steps<- hourly_steps %>% 
+  rename(date_time = activityhour) %>% 
+  mutate(date_time = as.POSIXct(date_time,format ="%m/%d/%Y %I:%M:%S %p" , tz=Sys.timezone()))
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:20.50409Z","iopub.execute_input":"2023-10-01T04:41:20.505924Z","iopub.status.idle":"2023-10-01T04:41:20.597606Z"}}
+### We will check our cleaned datasets
+head(daily_sleep)
+head(daily_activity)
+head(hourly_steps)
+
+# %% [markdown]
+# ### 4.5 Merging Datasets <a class="anchor" id="merging_datasets_4_5"></a>
+# ##### We will merge daily_activity and daily_sleep to check any correlation between variables by using id and date as their primary keys
+
+# %% [code] {"_kg_hide-output":true,"execution":{"iopub.status.busy":"2023-10-01T04:41:22.818336Z","iopub.execute_input":"2023-10-01T04:41:22.820323Z","iopub.status.idle":"2023-10-01T04:41:22.886356Z"}}
+daily_activity_sleep <- merge(daily_activity, daily_sleep, by=c ("id", "date"))
+glimpse(daily_activity_sleep)
+
+# %% [markdown]
+# # <span style="color:#DAA520"> 5. Analyze Phase and Share Phase </span> <a class="anchor" id="analyze_phase_5"></a>
+# 
+# We will analyze trends of the users of FitBit and determine if that can help us on BellaBeat's marketing strategy. 
+# 
+# ### 5.1 Type of users per activity level <a class="anchor" id="type_of_users_per_activity_level"></a>
+# 
+# We can categorize users based on an out data source as follows:
+# 
+# * Sedentary - Less than 5000 steps a day.
+# * Low active - Between  5000 and 7499 steps a day. 
+# * Somewhat active - Between 7500 and 9999 steps a day.
+# * Active - More than 10000 steps a day. 
+# 
+# Data Source <https://www.medicinenet.com/how_many_steps_a_day_is_considered_active/article.htm>
+# 
+# ### Calculate the daily steps average by user
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:24.641498Z","iopub.execute_input":"2023-10-01T04:41:24.643591Z","iopub.status.idle":"2023-10-01T04:41:24.698326Z"}}
+daily_average <- daily_activity_sleep %>%
+  group_by(id) %>%
+  summarise (mean_daily_steps = mean(totalsteps), mean_daily_calories = mean(calories), mean_daily_sleep = mean(totalminutesasleep))
+
+head(daily_average)
+
+# %% [markdown]
+# ### Classify our users by the daily average steps
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:26.449867Z","iopub.execute_input":"2023-10-01T04:41:26.451714Z","iopub.status.idle":"2023-10-01T04:41:26.502929Z"}}
+user_type <- daily_average %>%
+  mutate(user_type = case_when(
+    mean_daily_steps < 5000 ~ "sedentary",
+    mean_daily_steps >= 5000 & mean_daily_steps < 7499 ~ "low active", 
+    mean_daily_steps >= 7500 & mean_daily_steps < 9999 ~ "somewhat active", 
+    mean_daily_steps >= 10000 ~ "active"
+  ))
+
+head(user_type)
+
+# %% [markdown]
+# ### Creating percentage of each user type for better visualizing on graph 
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:29.733321Z","iopub.execute_input":"2023-10-01T04:41:29.734973Z","iopub.status.idle":"2023-10-01T04:41:29.807069Z"}}
+user_type_percent <- user_type %>%
+  group_by(user_type) %>%
+  summarise(total = n()) %>%
+  mutate(totals = sum(total)) %>%
+  group_by(user_type) %>%
+  summarise(total_percent = total / totals) %>%
+  mutate(labels = scales::percent(total_percent))
+
+user_type_percent$user_type <- factor(user_type_percent$user_type , levels = c("active", "somewhat active", "low active", "sedentary"))
+
+
+head(user_type_percent)
+
+# %% [markdown]
+# ### User type distribution 
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:32.877864Z","iopub.execute_input":"2023-10-01T04:41:32.880389Z","iopub.status.idle":"2023-10-01T04:41:33.952954Z"}}
+user_type_percent %>%
+  ggplot(aes(x="",y=total_percent, fill=user_type)) +
+  geom_bar(stat = "identity", width = 1)+
+  coord_polar("y", start=0)+
+  theme_minimal()+
+  theme(axis.title.x= element_blank(),
+        axis.title.y = element_blank(),
+        panel.border = element_blank(), 
+        panel.grid = element_blank(), 
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        plot.title = element_text(hjust = 0.5, size=14, face = "bold")) +
+  scale_fill_manual(values = c("#006400","#85e085", "#00BFFF", "#8B0000")) +
+  geom_text(aes(label = labels),
+            position = position_stack(vjust = 0.5))+
+  labs(title="User type distribution")
+
+# %% [markdown]
+# ### 5.2 Calculating the weekdays based on our column date <a class="anchor" id="Calculating_the_weekdays"></a>
+# #### We are also calculating the average steps walked and minutes sleeped by weekday
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:37.554544Z","iopub.execute_input":"2023-10-01T04:41:37.556479Z","iopub.status.idle":"2023-10-01T04:41:37.607651Z"}}
+weekday_steps_sleep <- daily_activity_sleep %>%
+  mutate(weekday = weekdays(date))
+
+weekday_steps_sleep$weekday <-ordered(weekday_steps_sleep$weekday, levels=c("Monday", "Tuesday", "Wednesday", "Thursday",
+"Friday", "Saturday", "Sunday"))
+
+ weekday_steps_sleep <-weekday_steps_sleep%>%
+  group_by(weekday) %>%
+  summarize (daily_steps = mean(totalsteps), daily_sleep = mean(totalminutesasleep))
+
+head(weekday_steps_sleep)
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:41:58.231985Z","iopub.execute_input":"2023-10-01T04:41:58.234104Z","iopub.status.idle":"2023-10-01T04:41:58.588681Z"}}
+    ggplot(weekday_steps_sleep) +
+      geom_col(aes(weekday, daily_steps), fill = "#006699") +
+      geom_hline(yintercept = 7500) +
+      labs(title = "Daily steps per weekday", x= "", y = "") +
+      theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust = 1))
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:42:13.082116Z","iopub.execute_input":"2023-10-01T04:42:13.089181Z","iopub.status.idle":"2023-10-01T04:42:13.65172Z"}}
+ ggplot(weekday_steps_sleep, aes(weekday, daily_sleep)) +
+      geom_col(fill = "#85e0e0") +
+      geom_hline(yintercept = 480) +
+      labs(title = "Minutes asleep per weekday", x= "", y = "") +
+      theme(axis.text.x = element_text(angle = 45,vjust = 0.5, hjust = 1))
+  
+
+# %% [markdown]
+# ### In the graphs we notice :- 
+# 
+# * Users walk daily the recommended amount of steps of ~ 7500. 
+# 
+# * Users don't sleep the recommended amount of minutes ~ 480 min. 
+# 
+
+# %% [markdown]
+# ### 5.3 Hourly steps throughout the day <a class="anchor" id="hourly_steps_throughout_the_day"></a>
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:43:51.741516Z","iopub.execute_input":"2023-10-01T04:43:51.74344Z","iopub.status.idle":"2023-10-01T04:43:52.237745Z"}}
+hourly_steps <- hourly_steps %>%
+  separate(date_time, into = c("date", "time"), sep= " ") %>%
+  mutate(date = ymd(date)) 
+  
+head(hourly_steps)
+
+
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:43:54.766466Z","iopub.execute_input":"2023-10-01T04:43:54.768289Z","iopub.status.idle":"2023-10-01T04:43:55.157505Z"}}
+hourly_steps %>%
+  group_by(time) %>%
+  summarize(average_steps = mean(steptotal)) %>%
+  ggplot() +
+  geom_col(mapping = aes(x=time, y = average_steps, fill = average_steps)) + 
+  labs(title = "Hourly steps throughout the day", x="", y="") + 
+  scale_fill_gradient(low = "green", high = "red")+
+  theme(axis.text.x = element_text(angle = 90))
+
+# %% [markdown]
+# ### In the graphs we notice :- 
+# 
+# * users are more active between 8am and 7pm. 
+# * Walking more steps at afternoon from 12pm to 2pm and evening from 5pm and 7pm. 
+# 
+# 
+# ### 5.4 Correlations <a class="anchor" id="correlations"></a> 
+# #### Identify any correlation between different variables:- 
+# #### (Daily steps and daily sleep),(Daily steps and calories)
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:44:16.10723Z","iopub.execute_input":"2023-10-01T04:44:16.109341Z","iopub.status.idle":"2023-10-01T04:44:18.360347Z"}}
+ggplot(daily_activity_sleep, aes(x=totalsteps, y=totalminutesasleep))+
+  geom_jitter() +
+  geom_smooth(color = "red") + 
+  labs(title = "Daily steps vs Minutes asleep", x = "Daily steps", y= "Minutes asleep") +
+   theme(panel.background = element_blank(),
+        plot.title = element_text( size=14))
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:44:26.885306Z","iopub.execute_input":"2023-10-01T04:44:26.88817Z","iopub.status.idle":"2023-10-01T04:44:27.750067Z"}}
+ggplot(daily_activity_sleep, aes(x=totalsteps, y=calories))+
+  geom_jitter() +
+  geom_smooth(color = "red") + 
+  labs(title = "Daily steps vs Calories", x = "Daily steps", y= "Calories") +
+   theme(panel.background = element_blank(),
+        plot.title = element_text( size=14))
+
+# %% [markdown]
+# In our plots we notice that :- 
+# 
+# * There is **no correlation** between daily steps and the sleep in a day. 
+# 
+# * There is a **positive correlation** between steps and calories burned. As assumed the more steps walked the more calories may be burned. 
+# 
+# 
+# ### 5.5 Use of smart device <a class="anchor" id="use_of_smart_device"></a> 
+# 
+# #### 5.5.1 Days used smart device <a class="anchor" id="days_used_smart_device"></a>
+# 
+# Calculate the number of users that use their smart device on a daily basis and classify them as :-
+# 
+# * high use - users who use their device between 21 and 31 days. 
+# * moderate use - users who use their device between 10 and 20 days. 
+# * low use - users who use their device between 1 and 10 days. 
+# 
+# #### Now we will create a new data frame grouping by Id, calculating number of days used and creating a new column with the classification explained above.
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:44:34.222418Z","iopub.execute_input":"2023-10-01T04:44:34.224134Z","iopub.status.idle":"2023-10-01T04:44:34.268938Z"}}
+daily_use <- daily_activity_sleep %>%
+  group_by(id) %>%
+  summarize(days_used=sum(n())) %>%
+  mutate(usage = case_when(
+    days_used >= 1 & days_used <= 10 ~ "low use",
+    days_used >= 11 & days_used <= 20 ~ "moderate use", 
+    days_used >= 21 & days_used <= 31 ~ "high use", 
+  ))
+  
+head(daily_use)
+
+# %% [markdown]
+# #### In this stage we will create a percentage data frame to better visualize the results in the graph
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:44:36.757764Z","iopub.execute_input":"2023-10-01T04:44:36.759869Z","iopub.status.idle":"2023-10-01T04:44:36.816869Z"}}
+daily_use_percent <- daily_use %>%
+  group_by(usage) %>%
+  summarise(total = n()) %>%
+  mutate(totals = sum(total)) %>%
+  group_by(usage) %>%
+  summarise(total_percent = total / totals) %>%
+  mutate(labels = scales::percent(total_percent))
+
+daily_use_percent$usage <- factor(daily_use_percent$usage, levels = c("high use", "moderate use", "low use"))
+
+head(daily_use_percent)
+
+# %% [markdown]
+# #### Visualizing daily_use_percent
+# 
+
+# %% [code] {"execution":{"iopub.status.busy":"2023-10-01T04:44:39.544662Z","iopub.execute_input":"2023-10-01T04:44:39.546534Z","iopub.status.idle":"2023-10-01T04:44:39.918203Z"}}
+daily_use_percent %>%
+  ggplot(aes(x="",y=total_percent, fill=usage)) +
+  geom_bar(stat = "identity", width = 1)+
+  coord_polar("y", start=0)+
+  theme_minimal()+
+  theme(axis.title.x= element_blank(),
+        axis.title.y = element_blank(),
+        panel.border = element_blank(), 
+        panel.grid = element_blank(), 
+        axis.ticks = element_blank(),
+        axis.text.x = element_blank(),
+        plot.title = element_text(hjust = 0.5, size=14, face = "bold")) +
+  geom_text(aes(label = labels),
+            position = position_stack(vjust = 0.5))+
+  scale_fill_manual(values = c("#8B0000","#00FFFF","#FF7F50"),
+                    labels = c("High use - 21 to 31 days",
+                                 "Moderate use - 11 to 20 days",
+                                 "Low use - 1 to 10 days"))+
+  labs(title="Daily use of smart device")
+
+# %% [markdown]
+# ##### Results :- 
+# * 50% of highly usage for the number of users that use their smart device ~ between 21 to 31 days. 
+# * 12% of moderate usage for the number of users that use their smart device ~ 11 to 20 days. 
+# * 38% of low usage for the number of users that use their smart device really  ~ 1 to 10 days. 
+# 
+# 
+
+# %% [markdown]
+# # <span style="color:#DAA520"> 6. Conclusion (Act Phase) </span> <a class="anchor" id="conclusion_act_phase"></a>
+# 
+# Collecting data has allowed Bellabeat to empower women with knowledge about their own health and habits. Bellabeat has grown rapidly and positioned itself as a tech-driven wellness company for women.
+# 
+# 
+# After our analysis we identified different trends and discover insights that may help to improve **Bellabeat app**: 
+# 
+# ## <span style="color:#FF0000"> Recommendations </span>
+# 
+# 1. Steps Notification on app 
+# 
+# * We notice that the average of users walk more than 7,500 steps daily. We can put a minimum limit and motivate the clients to reach to the recommended steps ~ 8.000, **We can send them a reminder if they haven't fulfilled the recommended steps. Showing them a diagram with a positive correlation between steps and calories, With a title for example, The more you walk the more you burn, it could motivate them to fulfill their goals.**
+# 
+# 2. Notification and Recommendations to enhance the sleep 
+# 
+# * Based on our results we can notice that users sleep less than the recommended time ~ 8 hours a day. **They can set up a time about the sleep time and receive a reminder before the settled time. Also offer helpful recommendations based on science like supplements, And the best hours range of sleep period.**
+# 
+# 3. Competitive system
+# 
+# * Some people don't get motivated by notifications so **we can create like a steps competition between the clients on our app, For example, They can compete with their friends and the winner can be rewarded by a discount on the Bellabeat products.**|
+# 
+
+# %% [markdown]
+# # <span style="color:#0000FF"> My First Project </span>
+# 
