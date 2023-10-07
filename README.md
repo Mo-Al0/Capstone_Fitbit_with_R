@@ -8,4 +8,4 @@ Our primary goal to focus on analyze smart devices fitness data and determine ho
 * [Fitbit](https://www.kaggle.com/datasets/arashnic/fitbit)
   
 ## Tools
-* R - [R scripts](https://www.kaggle.com/code/moayedalmallah/capstone-bellabeat-fitbit-with-r)
+* R_Progamming - [R scripts](https://www.kaggle.com/code/moayedalmallah/capstone-bellabeat-fitbit-with-r)
